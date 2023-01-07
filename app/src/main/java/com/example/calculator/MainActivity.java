@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,12 +25,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private String input="",Answer,allOperations="";
     private boolean clearResult;
-    private Handler handler;
+    String notificationAnswer,notifcationID;
     TextView output,sideDisplay;
     Button btnA, btnExp,btnDel,btnClear;
     Button btnDiv,btnMul,btnMin,btnPlus,btnDec,btnEquals;
     Button btn0,btn1,btn2,btn3,btn4,btn5,btn6,btn7,btn8,btn9;
     Button btnHistory,btnArray;
+    AlarmManager alarmManager;
 
     ArrayList<String> list = new ArrayList<String>();
 
@@ -64,11 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(btnArray,R.id.btnArray);
         addItemstoList(list);
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            NotificationChannel channel=new NotificationChannel("Id","Notification", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager=getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
+        createNotificationChannel();
 
     }
 
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 input="";
                 sideDisplay.setText("");
                 break;
-            case "A":
+            case "Ans":
                 clearResult=false;
                 input+=Answer;
                 break;
@@ -122,9 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Solve();
                 Answer=input;
                 allOperations="";
-
-                Intent serviceIntent = new Intent(this, NotificationHelper.class);
-                startService(serviceIntent);
+                notificationSetup(input);
 
                 break;
             case " ":
@@ -264,17 +261,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    public void notifyFunction(String s){
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(MainActivity.this,"Id");
-        builder.setContentTitle("Notifcation");
-        builder.setContentText("You received a Notification");
-        builder.setSmallIcon(R.drawable.ic_launcher_background);
-        builder.setAutoCancel(true);
+    public void notificationSetup(String s){
+        Log.d("here","REached NotificationSetup, Input -- "+input);
+        alarmManager=(AlarmManager) getSystemService(ALARM_SERVICE);
+        double waitingTime=Double.parseDouble(s);
+        Log.d("here","Waiting time -- "+waitingTime);
+        double a = System.currentTimeMillis();
+        long triggerTime= (long) (a+(waitingTime*1000));
+        Log.d("here","Currrent time -- "+(a));
+        Log.d("here","Trigger time -- "+triggerTime);
+        Log.d("here","Waiting time -- "+(a-triggerTime));
+        double differenceBtwnTimes=(double)  (triggerTime-a);
+        Intent intent=new Intent(MainActivity.this,NotificationHelper.class);
+        PendingIntent pendingIntent=PendingIntent.getBroadcast(MainActivity.this,1,intent,PendingIntent.FLAG_CANCEL_CURRENT);
 
-
-
-        NotificationManagerCompat managerCompat=NotificationManagerCompat.from(MainActivity.this);
-        managerCompat.notify(1,builder.build());
+        alarmManager.set(AlarmManager.RTC_WAKEUP,triggerTime,pendingIntent);
 
     }
+
+    public void createNotificationChannel(){
+
+        Log.d("here","REached Creating NOtification channel");
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            NotificationChannel notificationChannel=new NotificationChannel("Id","NAME",NotificationManager.IMPORTANCE_DEFAULT);
+
+            NotificationManager notificationManager=getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
 }
