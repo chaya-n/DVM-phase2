@@ -1,9 +1,16 @@
 package com.example.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private String input="",Answer,allOperations="";
     private boolean clearResult;
+    private Handler handler;
     TextView output,sideDisplay;
     Button btnA, btnExp,btnDel,btnClear;
     Button btnDiv,btnMul,btnMin,btnPlus,btnDec,btnEquals;
@@ -55,6 +63,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(btnHistory,R.id.btnHistory);
         assignId(btnArray,R.id.btnArray);
         addItemstoList(list);
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            NotificationChannel channel=new NotificationChannel("Id","Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager=getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
     }
 
     void assignId(Button btn,int id){
@@ -107,6 +122,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Solve();
                 Answer=input;
                 allOperations="";
+
+                Intent serviceIntent = new Intent(this, NotificationHelper.class);
+                startService(serviceIntent);
+
                 break;
             case " ":
                 if(input.length()>0){
@@ -245,5 +264,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+    public void notifyFunction(String s){
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(MainActivity.this,"Id");
+        builder.setContentTitle("Notifcation");
+        builder.setContentText("You received a Notification");
+        builder.setSmallIcon(R.drawable.ic_launcher_background);
+        builder.setAutoCancel(true);
 
+
+
+        NotificationManagerCompat managerCompat=NotificationManagerCompat.from(MainActivity.this);
+        managerCompat.notify(1,builder.build());
+
+    }
 }

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -124,17 +125,39 @@ public class ArrayMultiplication extends AppCompatActivity implements View.OnCli
             String arrays[]=s.split("X");
 
             ArrayList<Double> ansArray= new ArrayList();
+            ArrayList<Double> array1= new ArrayList();
+            ArrayList<Double> array2= new ArrayList();
+            ArrayList<String> answerDisplayArrayList = new ArrayList<String>();
+
+
+            array1=stringArrayToDoubleArray(arrays[0]);
+            array2=stringArrayToDoubleArray(arrays[1]);
+
+            Log.d("thistag2","Array1XArray2  "+array1.toString()+" "+array2.toString());
+
             Log.d("thistag", Arrays.toString(arrays));
-            if(arrays.length==2 & !stringEndsWithX & arraySizeCheck(arrays[0],arrays[1])){
-                Log.d("thistag","In the length==2 blcok "+arrays);
-                for(int i=0;i<arrays[0].length();i++){
-                    if(Character.isDefined(arrays[0].charAt(i)) & Character.isDigit(arrays[1].charAt(i))){
-                        double mul2=(double) Character.getNumericValue(arrays[1].charAt(i));
-                        double mul1=(double) Character.getNumericValue(arrays[0].charAt(i));
-                        ansArray.add(mul1*mul2);
+            if(arrays.length==2 & !stringEndsWithX & array1.size()==array2.size()){
+
+
+                Log.d("thistag","In the length==2 block "+arrays.toString());
+                for(int i=0;i<array1.size();i++){
+//                    if(Character.isDefined(arrays[0].charAt(i)) & Character.isDigit(arrays[1].charAt(i))){
+//                    double mul2=(double) Character.getNumericValue(arrays[1].charAt(i));
+//                    double mul1=(double) Character.getNumericValue(arrays[0].charAt(i));
+//                    ansArray.add(mul1*mul2);
+//                    }
+                    Log.d("thistag","Array1XArray2  "+String.valueOf(array1.get(i)*array2.get(i)));
+                    ansArray.add(array1.get(i)*array2.get(i));
+                }
+//                ansDisplay.setText(ansArray.toString());
+                for(int i=0;i<ansArray.size();i++){
+                    if (ansArray.get(i) == Math.round(ansArray.get(i))) {
+                        answerDisplayArrayList.add(String.valueOf(ansArray.get(i).intValue()));
+                    } else {
+                        answerDisplayArrayList.add(String.valueOf(ansArray.get(i)));
                     }
                 }
-                ansDisplay.setText(ansArray.toString());
+                ansDisplay.setText(String.valueOf(answerDisplayArrayList));
             }
 //            Log.d("thistag", String.valueOf(ansArray.isEmpty()));
             Log.d("notag", "Does the string end with X?"+String.valueOf(stringEndsWithX));
@@ -142,16 +165,19 @@ public class ArrayMultiplication extends AppCompatActivity implements View.OnCli
                 if (stringEndsWithX){
                     ansDisplay.setText("Syntax Error");
                 }
-                else if(!arraySizeCheck(arrays[0],arrays[1])){
+                else if(array1.size()!=array2.size()){
                     ansDisplay.setText(("Arrays must be of the same size"));
                 }
-                else{
-                    ansDisplay.setText("Cannot multiply more than 2 arrays");
+                if(arrays.length!=2){
+                    ansDisplay.setText("Cannot Multiply more than 2 arrays");
                 }
             }
         }
         catch (Exception e){
-            ansDisplay.setText("Syntax Error");
+//            ansDisplay.setText("Syntax Error");                       //Change this
+            ansDisplay.setText(e.getMessage());
+            e.printStackTrace();
+            Log.d("Midsemsover",e.getMessage());
         }
     }
 
@@ -173,6 +199,21 @@ public class ArrayMultiplication extends AppCompatActivity implements View.OnCli
             return true;
         }
         return false;
+    }
+
+    public ArrayList<Double> stringArrayToDoubleArray(String s){
+
+        ArrayList<Double> returnList = new ArrayList<Double>();
+
+        s=truncate(s);
+        String[] numbers = s.split(",");
+
+        for (int i = 0; i < numbers.length; i++)
+        {
+            returnList.add(Double.parseDouble(numbers[i]));
+        }
+        Log.d("Midsemsover",returnList.toString());
+        return returnList;
     }
 
 //    public  Boolean syntaxCheck(String s) {
