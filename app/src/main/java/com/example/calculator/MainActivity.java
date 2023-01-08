@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(list.contains(data)){
             allOperations=allOperations+data;
         }
-
         switch (data){
             case "AC":
                 input="";
@@ -107,10 +106,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 clearResult=false;
                 input+=Answer;
                 break;
-            case "^":
+            case "NOTIF":
 //                clearResult=false;
                 Solve();
-                input+="^";
+                if(Double.parseDouble(input)>=0 & input!=null){
+                    notificationSetup(input);
+                }
                 break;
             case "=":
                 clearResult=true;
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Solve();
                 Answer=input;
                 allOperations="";
-                notificationSetup(input);
+//                notificationSetup(input);
 
                 break;
             case " ":
@@ -161,7 +162,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sideDisplay.setText(dh.displayMostRecent());
 
     }
+
     public void Solve(){
+        ArrayList arrayList=new ArrayList();
         if(input.split("\\*").length==2){
             String numbers[]=input.split("\\*");
             try{
@@ -223,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String numbers[]=input.split("\\-");
             if(numbers[0]=="" && numbers.length==2){
                 numbers[0]=0+"";
+
             }
             try{
                 double sub=0;
@@ -239,9 +243,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 input="Error";
             }
         }
-        else if (input.split("\\-").length>=2){
-            input="Syntax Error";
-        }
+//        else if (input.split("\\-").length>=2){
+//            input="Syntax Error";
+//        }
         String n[]=input.split("\\.");
         if(n.length>1){
             if(n[1].equals("0")){
@@ -270,10 +274,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         long triggerTime= (long) (a+(waitingTime*1000));
         Log.d("here","Currrent time -- "+(a));
         Log.d("here","Trigger time -- "+triggerTime);
-        Log.d("here","Waiting time -- "+(a-triggerTime));
+        Log.d("here","Waiting time -- "+(triggerTime-a));
         double differenceBtwnTimes=(double)  (triggerTime-a);
         Intent intent=new Intent(MainActivity.this,NotificationHelper.class);
-        PendingIntent pendingIntent=PendingIntent.getBroadcast(MainActivity.this,1,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent=PendingIntent.getBroadcast(MainActivity.this,1,intent,PendingIntent.FLAG_MUTABLE);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP,triggerTime,pendingIntent);
 

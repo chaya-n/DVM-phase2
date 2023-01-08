@@ -174,8 +174,8 @@ public class ArrayMultiplication extends AppCompatActivity implements View.OnCli
             }
         }
         catch (Exception e){
-//            ansDisplay.setText("Syntax Error");                       //Change this
-            ansDisplay.setText(e.getMessage());
+            ansDisplay.setText("Syntax Error");
+//            ansDisplay.setText(e.getMessage());
             e.printStackTrace();
             Log.d("Midsemsover",e.getMessage());
         }

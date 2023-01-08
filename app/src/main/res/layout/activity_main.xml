@@ -15,8 +15,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="16dp"
+        android:isScrollContainer="true"
         android:textAlignment="textEnd"
         android:textColor="#CCCCCC"
+        android:textIsSelectable="true"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/output"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,9 +35,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="70dp"
+        android:cursorVisible="true"
+        android:isScrollContainer="true"
         android:text="0"
         android:textAlignment="textEnd"
         android:textColor="@color/white"
+        android:textIsSelectable="true"
         android:textSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/buttons_layout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,15 +88,20 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/bttnDecimal"
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-                android:layout_width="80dp"
+                android:layout_width="89dp"
                 android:layout_height="72dp"
                 android:layout_margin="8dp"
 
                 android:height="72dp"
-                android:gravity="center|center_horizontal|center_vertical"
-                android:text="^"
+                android:foregroundGravity="fill_horizontal"
+                android:gravity="fill|center_vertical"
+                android:text="NOTIF"
+                android:textAlignment="gravity"
+                android:textAllCaps="false"
                 android:textColor="#FAFAFA"
-                android:textSize="35dp"
+                android:textIsSelectable="false"
+                android:textSize="15dp"
+                android:textStyle="bold"
                 app:backgroundTint="#8687A3"
                 app:cornerRadius="50dp" />
 
@@ -345,6 +355,7 @@
                 android:text="Ans"
                 android:textColor="#FAFAFA"
                 android:textSize="17.2dp"
+                android:textStyle="bold"
                 app:backgroundTint="#8687A3"
                 app:cornerRadius="50dp" />
 
@@ -385,9 +396,9 @@
                 android:gravity="center|center_horizontal|center_vertical"
                 android:text="="
                 android:textColor="@color/black"
-                android:textSize="32dp"
+                android:textSize="35dp"
                 app:backgroundTint="@color/white"
-                app:cornerRadius="50dp"/>
+                app:cornerRadius="50dp" />
 
         </LinearLayout>
 
@@ -402,6 +413,7 @@
         android:background="#DF660B"
         android:backgroundTint="#DF660B"
         android:text="history"
+        android:textStyle="bold"
         app:cornerRadius="10dp"
         app:icon="@android:drawable/ic_menu_recent_history"
         app:iconGravity="textStart"
@@ -420,6 +432,7 @@
         android:background="#DF660B"
         android:backgroundTint="@color/Cathy"
         android:text="Array"
+        android:textStyle="bold"
         app:cornerRadius="10dp"
         app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
